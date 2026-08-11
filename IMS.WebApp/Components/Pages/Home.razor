@@ -1,0 +1,30 @@
+﻿@page "/"
+
+@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUsecase;
+
+<PageTitle>Test</PageTitle>
+
+<br/>
+<br/>
+
+<ul>
+	@if (inventories is not null && inventories.Count > 0)
+	{
+		foreach(Inventory inv in inventories)
+		{
+			<li>
+				@inv.InventoryName
+			</li>
+		}
+	}
+</ul>
+
+@code{
+	private List<Inventory>? inventories;
+
+	protected override async Task OnInitializedAsync()
+	{
+		inventories = (await ViewInventoriesByNameUsecase.ExecuteAsync()).ToList();
+	}
+}
+
