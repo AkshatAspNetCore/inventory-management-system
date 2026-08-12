@@ -1,23 +1,23 @@
 ﻿@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUsecase;
 
-<table>
-	<thread>
+<table class="table">
+	<thead>
 		<tr>
 			<th>Name</th>
 			<th>Quantity</th>
 			<th>Price</th>
 			<th></th>
 		</tr>
-	</thread>
-	<body>
+	</thead>
+	<tbody>
 		@if (inventories is not null && inventories.Count > 0)
-	{
-		foreach(Inventory inv in inventories)
 		{
-			<InventoryListItemComponent Inventory="inv"></InventoryListItemComponent>
+			foreach(Inventory inv in inventories)
+			{
+				<InventoryListItemComponent Inventory="inv"></InventoryListItemComponent>
+			}
 		}
-	}
-	</body>
+	</tbody>
 </table>
 
 
