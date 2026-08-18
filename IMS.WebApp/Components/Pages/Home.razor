@@ -25,15 +25,6 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		/*var inventory = new Inventory()
-		{
-			InventoryId = 1,
-			InventoryName = "Bike Seat",
-			Quantity = 10,
-			Price = 100
-		};*/
-
-		//await EditInventoryUseCase.ExecuteAsync(inventory);
 		inventories = (await ViewInventoriesByNameUsecase.ExecuteAsync()).ToList();
 	}
 }
