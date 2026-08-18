@@ -55,11 +55,16 @@
 	public int InvId { get; set; }
 
 	[SupplyParameterFromForm]
-	public Inventory? inventory { get; set; } = new Inventory();
+	public Inventory? inventory { get; set; }
 
 	protected override async Task OnParametersSetAsync()
 	{
 		this.inventory ??= await ViewInventoryByIdUseCase.ExecuteAsync(this.InvId);
+
+		if(this.inventory is null)
+		{
+			NavigationManager.NavigateTo("/not-found");		
+		}
 	}
 
 	private async Task Update()
