@@ -25,9 +25,14 @@
 	private List<Inventory>? inventories;
 
 	[Parameter]
-	public string? SearchInventoryFilter { get; set; }
+	public string? SearchInventoryFilter { get; set; } = string.Empty;
 
-	protected override async Task OnInitializedAsync()
+	//OnParameterSetAsync is called when the component receives parameters from its 
+	//parent in the render tree. 
+	//This method is called each time the parent component is 
+	//rendered and provides an opportunity to react to parameter changes.
+
+	protected override async Task OnParametersSetAsync()
 	{
 		inventories = (await ViewInventoriesByNameUsecase.ExecuteAsync(SearchInventoryFilter??"")).ToList();
 	}
