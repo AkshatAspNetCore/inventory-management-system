@@ -1,0 +1,41 @@
+﻿@inject IViewProductsByNameUseCase ViewProductsByNameUsecase;
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Quantity</th>
+			<th>Price</th>
+			<th></th>
+			<th style="text-align:keft"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (inventories is not null && inventories.Count > 0)
+		{
+			foreach(Product inv in inventories)
+			{
+				<ProductListItemComponent Product="inv"></ProductListItemComponent>
+			}
+		}
+	</tbody>
+</table>
+
+
+@code{
+	private List<Product>? inventories;
+
+	[Parameter]
+	public string? SearchProductFilter { get; set; } = string.Empty;
+
+	//OnParameterSetAsync is called when the component receives parameters from its 
+	//parent in the render tree. 
+	//This method is called each time the parent component is 
+	//rendered and provides an opportunity to react to parameter changes.
+
+	protected override async Task OnParametersSetAsync()
+	{
+		inventories = (await ViewProductsByNameUsecase.ExecuteAsync(SearchProductFilter??"")).ToList();
+	}
+}
+
