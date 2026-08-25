@@ -15,7 +15,7 @@
 		{
 			foreach(Product inv in inventories)
 			{
-				<ProductListItemComponent Product="inv"></ProductListItemComponent>
+				<ProductListItemComponent @rendermode="InteractiveServer" Product="inv"></ProductListItemComponent>
 			}
 		}
 	</tbody>
