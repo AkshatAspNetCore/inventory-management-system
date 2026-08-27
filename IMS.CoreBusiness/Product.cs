@@ -15,5 +15,26 @@ namespace IMS.CoreBusiness
 
         [Range(0, int.MaxValue, ErrorMessage = "Price must be greater or equal to 0.")]
         public double Price { get; set; }
+        public List<ProductInventory> ProductInventories { get; set; } = new List<ProductInventory>();
+
+        public void AddInventory(Inventory inventory)
+        {
+            if (ProductInventories.Any(x => x.Inventory is not null && x.Inventory.InventoryName.Equals(inventory.InventoryName))) return;
+
+            this.ProductInventories.Add(new ProductInventory
+            {
+                ProductId = ProductId,
+                InventoryId = inventory.InventoryId,
+                Inventory = inventory,
+                InventoryQuantity = 1,
+                Product = this
+            });
+        }
+
+        public void RemoveInventory(ProductInventory productInventory)
+        {
+            if (productInventory is not null)
+                ProductInventories.Remove(productInventory);
+        }
     }
 }

@@ -13,7 +13,9 @@
 	<ul>
 		@foreach(Inventory inv in _inventories)
 		{
-			<li @key="inv.InventoryId">
+			<li @key="inv.InventoryId"
+				@onclick="() => { HandleSelectInventory(inv); }"
+			>
 				@inv.InventoryName
 			</li>
 		}
@@ -22,6 +24,9 @@
 }
 
 @code {
+	[Parameter]
+	public EventCallback<Inventory> OnInventorySelected{ get; set; }
+
 	private string _searchFilter;
 	private string searchFilter
 	{
@@ -41,6 +46,12 @@
 		_inventories = (await ViewIventoriesByNameUsecase.ExecuteAsync(this.searchFilter)).ToList();
 
 		StateHasChanged();
+	}
+
+	private async Task HandleSelectInventory(Inventory inventory)
+	{
+		await OnInventorySelected.InvokeAsync(inventory);
+		_inventories.Clear();
 	}
 
 }
