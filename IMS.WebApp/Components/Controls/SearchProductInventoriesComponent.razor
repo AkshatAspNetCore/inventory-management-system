@@ -2,18 +2,18 @@
 
 <div class="input-group">
 		<input class="form-control" placeholder="Type something here to search" 
-		@bind-value="this.searchFilter">
+		@bind-value="this.searchFilter" @bind-value:event="oninput">
 		</input>
 		<button type="button" class="btn-success input-group-text" @onclick="HandleSearch">Search</button>
 </div>
 
 @if(_inventories is not null && _inventories.Count > 0)
 {
-	<div style="overflow-y:auto; max-height: 300px; border:1px solid silver; padding-top: 5px">
-	<ul style="list-style-type: none">
+	<div class="search-result">
+	<ul>
 		@foreach(Inventory inv in _inventories)
 		{
-			<li @key="inv.InventoryId" style="cursor:pointer">
+			<li @key="inv.InventoryId">
 				@inv.InventoryName
 			</li>
 		}
@@ -22,13 +22,25 @@
 }
 
 @code {
+	private string _searchFilter;
+	private string searchFilter
+	{
+		get => _searchFilter;
+		set
+		{
+			_searchFilter = value;
+			HandleSearch();
+		}
+	}
 
-	private string searchFilter = string.Empty;
 	private List<Inventory> _inventories = new List<Inventory>();
 
 	private async Task HandleSearch()
 	{
+		await Task.Delay(2000);
 		_inventories = (await ViewIventoriesByNameUsecase.ExecuteAsync(this.searchFilter)).ToList();
+
+		StateHasChanged();
 	}
 
 }
