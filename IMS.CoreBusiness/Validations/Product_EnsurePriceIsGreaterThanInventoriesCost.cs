@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IMS.CoreBusiness.Validations
+{
+    public class Product_EnsurePriceIsGreaterThanInventoriesCost : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var product = validationContext.ObjectInstance as Product;
+            if (product != null)
+            {
+                if(!ValidatePrice(product))
+                    return new ValidationResult($"Product price must be greater than the total cost of its inventories: ${TotalInventoriesCost(product)}!",
+                        new List<string>() { validationContext.MemberName });
+            }
+
+            return ValidationResult.Success;
+        }
+
+        private double TotalInventoriesCost(Product product)
+        {
+            if (product == null || product.ProductInventories == null)
+            {
+                return 0;
+            }
+
+            return product.ProductInventories.Sum(x => x.Inventory?.Price * x.InventoryQuantity ?? 0);
+        }
+
+        private bool ValidatePrice(Product product)
+        {
+            if (product.ProductInventories == null || product.ProductInventories.Count == 0)
+            {
+                return true;
+            }
+            
+            if(TotalInventoriesCost(product) >= product.Price) return false;
+
+            return true;
+        }
+    }
+}
