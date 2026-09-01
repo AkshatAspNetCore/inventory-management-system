@@ -45,9 +45,45 @@ namespace IMS.Plugins.InMemory
             return _products.Where(x => x.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public Task<Product?> GetProductByIdAsync(int ProductId)
+        public async Task<Product?> GetProductByIdAsync(int ProductId)
         {
-            return Task.FromResult<Product?>(_products.FirstOrDefault(x => x.ProductId == ProductId));
+            var product = _products.FirstOrDefault(x => x.ProductId == ProductId);
+            var newProduct = new Product();
+
+            if (product != null)
+            {
+                newProduct.ProductId = product?.ProductId ?? 0;
+                newProduct.ProductName = product?.ProductName ?? string.Empty;
+                newProduct.Quantity = product?.Quantity ?? 0;
+                newProduct.Price = product?.Price ?? 0;
+                newProduct.ProductInventories = new List<ProductInventory>();
+
+                if (product.ProductInventories != null && product.ProductInventories.Count > 0)
+                {
+                    foreach (var productInventory in product.ProductInventories)
+                    {
+                        var newProductInventory = new ProductInventory
+                        {
+                            ProductId = productInventory.ProductId,
+                            Product = newProduct,
+                            InventoryId = productInventory.InventoryId,
+                            Inventory = new Inventory(),
+                            InventoryQuantity = productInventory.InventoryQuantity
+                        };
+
+                        if (productInventory.Inventory != null)
+                        {
+                            newProductInventory.Inventory.InventoryId = productInventory.Inventory.InventoryId;
+                            newProductInventory.Inventory.InventoryName = productInventory.Inventory.InventoryName;
+                            newProductInventory.Inventory.Quantity = productInventory.Inventory.Quantity;
+                            newProductInventory.Inventory.Price = productInventory.Inventory.Price;
+                        }
+
+                        newProduct.ProductInventories.Add(newProductInventory);
+                    }
+                }
+            }
+            return await Task.FromResult<Product?>(newProduct);
         }
 
         public Task UpdateProductAsync(Product Product)
