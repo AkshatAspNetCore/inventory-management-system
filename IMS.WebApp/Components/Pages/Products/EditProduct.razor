@@ -1,4 +1,7 @@
 ﻿@page "/editproduct/{invId:int}"
+
+@rendermode InteractiveServer
+
 @inject NavigationManager NavigationManager
 @inject IViewProductByIdUseCase ViewProductByIdUseCase
 @inject IEditProductUseCase EditProductUseCase
@@ -8,10 +11,9 @@
 
 @if(this.product is not null)
 {
-	<EditForm Model="product" FormName="formProduct" OnValidSubmit="Update">
+	<EditForm Model="product" OnValidSubmit="Update">
 	<DataAnnotationsValidator></DataAnnotationsValidator>
-
-	<InputNumber @bind-Value="product.ProductId" hidden></InputNumber>
+	<ValidationSummary />
 
 	<div class="from-group">
 		<label for="name">Product Name</label>
@@ -42,6 +44,13 @@
 		</InputNumber>
 		<ValidationMessage For="() => product.Price"></ValidationMessage>
 	</div>
+
+	<div class="from-group">
+		<label for="inventory">Inventories</label>
+		<ProductInventoriesComponent Product="this.product"></ProductInventoriesComponent>
+	</div>
+
+
 	<br/>
 	<button type="Submit" class="btn btn-primary">Update</button>
 	&nbsp;
