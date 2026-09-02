@@ -91,12 +91,13 @@ namespace IMS.Plugins.InMemory
             if(_products.Any(x => x.ProductId != Product.ProductId && x.ProductName.Equals(Product.ProductName, StringComparison.OrdinalIgnoreCase)))
                 return Task.CompletedTask;
 
-            var invToUpdate = _products.FirstOrDefault(x => x.ProductId == Product.ProductId);
-            if (invToUpdate != null)
+            var productToUpdate = _products.FirstOrDefault(x => x.ProductId == Product.ProductId);
+            if (productToUpdate != null)
             {
-                invToUpdate.ProductName = Product.ProductName;
-                invToUpdate.Quantity = Product.Quantity;
-                invToUpdate.Price = Product.Price;
+                productToUpdate.ProductName = Product.ProductName;
+                productToUpdate.Quantity = Product.Quantity;
+                productToUpdate.Price = Product.Price;
+                productToUpdate.ProductInventories = Product.ProductInventories;
             }
 
             return Task.CompletedTask;
