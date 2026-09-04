@@ -4,19 +4,27 @@
 		type="text"
 		class="form-control"
 		@bind-value="userInput" 
-		@bind-value:event="oninput"/>
+		@bind-value:event="oninput"
+		@onkeyup="OnKeyUp"/>
 
 </div>
 @if(_searchResults is not null && _searchResults.Count > 0)
 {
 	<div class="search-result">
 	<ul>
-		@foreach(var item in _searchResults)
-		{
-			<li @key="item.Id">
-				@item.Name
-			</li>
-		}
+		@{
+			int itemIndex = 0;
+			foreach(var item in _searchResults)
+				{
+					<li @key="item.Id" 
+						class="@(itemIndex == currentItemIndex?"selected":"")"
+						@onclick="() => HandleSelectItem(item)"
+						>
+						@item.Name
+					</li>
+					itemIndex++;
+				}
+			}
 	</ul>
 	</div>	
 }
@@ -29,9 +37,17 @@
 	[Parameter]
 	public Func<string, List<ItemViewModel>>? SearchFunction { get; set; }
 
+	[Parameter]
+	public EventCallback<ItemViewModel> OnItemSelected { get; set; }
+
+	private ItemViewModel? _selectedItem = null;
+
 	private List<ItemViewModel>? _searchResults = null;
 
 	private string _userInput { get; set; } = string.Empty;
+
+	private ItemViewModel? currentItem = null;
+	private int currentItemIndex = -1;
 
 	public string userInput 
 	{ 
@@ -44,7 +60,59 @@
 			{
 				_searchResults = SearchFunction(_userInput);
 			}
+			else
+			{
+				_searchResults?.Clear();
+			}
 		} 
+	}
+
+	private void ClearHighlighting()
+	{
+		_searchResults = null;
+		currentItemIndex = -1;
+		currentItem = null;
+	}
+
+	private void HandleSelectItem(ItemViewModel? item)
+	{
+		ClearHighlighting();
+
+		if (item is not null)
+		{
+			_selectedItem = item;
+			_userInput = item?.Name ?? string.Empty;
+			_searchResults?.Clear();
+
+			OnItemSelected.InvokeAsync(item);
+		}
+	}
+
+	private void OnKeyUp(KeyboardEventArgs e)
+	{
+		if ((e.Code == "ArrowUp" || e.Code == "ArrowDown") && _searchResults?.Count > 0 && _searchResults is not null)
+		{
+			if(e.Code == "ArrowDown" && currentItemIndex < _searchResults.Count - 1)
+			{
+				currentItem = _searchResults[++currentItemIndex];
+			}
+			else if(e.Code == "ArrowUp")
+			{
+				if(currentItemIndex > 0)
+				{
+					currentItem = _searchResults[--currentItemIndex];
+				}
+				else
+				{
+					currentItemIndex = -1;
+					currentItem = null;
+				}
+			}
+		}
+		else if(e.Code == "Enter" || e.Code == "NumpadEnter")
+		{
+			HandleSelectItem(currentItem);
+		}
 	}
 
 	public class ItemViewModel
