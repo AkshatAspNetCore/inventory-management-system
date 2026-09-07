@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IMS.UseCases.Inventories
+namespace IMS.UseCases.Products
 {
     public class ViewProductsByNameUseCase : IViewProductsByNameUseCase
     {

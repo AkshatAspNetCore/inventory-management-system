@@ -19,7 +19,7 @@ namespace IMS.Plugins.InMemory
             this.inventoryRepository = inventoryRepository;
         }
 
-        public async Task ProduceAsync(string productionNnumber, Product product, int quantity, string doneBy, double price)
+        public async Task ProduceAsync(string productionNnumber, Product product, int quantity, string doneBy)
         {
             var prod = await productRepository.GetProductByIdAsync(product.ProductId);
             if (prod is not null)
