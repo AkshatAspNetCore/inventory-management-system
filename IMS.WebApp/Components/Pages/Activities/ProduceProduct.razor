@@ -39,22 +39,23 @@
 </EditForm>
 
 @code {
-    private ProduceViewModel produceViewModel = new();
-    private Product? selectedProduct = null;
+	private ProduceViewModel produceViewModel = new();
+	private Product? selectedProduct = null;
 
-    private List<ItemViewModel>? SearchProduct(string name)
-    {
-        var list = ViewProductsByNameUseCase.ExecuteAsync(name).GetAwaiter().GetResult();
-        if (list is null) return null;
+	private List<ItemViewModel>? SearchProduct(string name)
+	{
+		var list = ViewProductsByNameUseCase.ExecuteAsync(name).GetAwaiter().GetResult();
+		if (list is null) return null;
 
-        return list.Select(x => new ItemViewModel { Id = x.ProductId, Name = x.ProductName })?.ToList();
-    }
+		return list.Select(x => new ItemViewModel { Id = x.ProductId, Name = x.ProductName })?.ToList();
+	}
 
-    private async Task HandleItemSelected(ItemViewModel item)
-    {
-        selectedProduct= await ViewProductByIdUseCase.ExecuteAsync(item.Id);
-        produceViewModel.ProductId = item.Id;
-    }
+	private async Task HandleItemSelected(ItemViewModel item)
+	{
+		selectedProduct= await ViewProductByIdUseCase.ExecuteAsync(item.Id);
+		produceViewModel.ProductId = item.Id;
+		produceViewModel.Product = this.selectedProduct;
+	}
 
     private async Task Produce()
     {
