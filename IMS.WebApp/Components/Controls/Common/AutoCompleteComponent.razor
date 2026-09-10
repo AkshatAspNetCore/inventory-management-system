@@ -35,7 +35,7 @@
 	public string Label { get; set; } = string.Empty;
 
 	[Parameter]
-	public Func<string, List<ItemViewModel>>? SearchFunction { get; set; }
+	public Func<string, Task<List<ItemViewModel>>>? SearchFunction { get; set; }
 
 	[Parameter]
 	public EventCallback<ItemViewModel> OnItemSelected { get; set; }
@@ -58,7 +58,7 @@
 
 			if (!string.IsNullOrWhiteSpace(_userInput) && SearchFunction != null)
 			{
-				_searchResults = SearchFunction(_userInput);
+				ViewItemsAsync();
 			}
 			else
 			{
@@ -72,6 +72,16 @@
 		_searchResults = null;
 		currentItemIndex = -1;
 		currentItem = null;
+	}
+
+	private async Task ViewItemsAsync()
+	{
+		if (SearchFunction != null)
+		{
+			_searchResults = await SearchFunction(_userInput);
+
+			StateHasChanged();
+		}
 	}
 
 	private void HandleSelectItem(ItemViewModel? item)

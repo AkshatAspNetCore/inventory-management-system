@@ -19,7 +19,7 @@ namespace IMS.Plugins.InMemory
             this.inventoryRepository = inventoryRepository;
         }
 
-        public async Task ProduceAsync(string productionNnumber, Product product, int quantity, string doneBy)
+        public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneBy)
         {
             var prod = await productRepository.GetProductByIdAsync(product.ProductId);
             if (prod is not null)
@@ -29,7 +29,7 @@ namespace IMS.Plugins.InMemory
                     // add inventory transaction record
                     if (pi.Inventory is not null)
                     {
-                        inventoryTransactionRepository.ProduceAsync(productionNnumber, pi.Inventory, pi.InventoryQuantity * quantity, doneBy, -1);
+                        inventoryTransactionRepository.ProduceAsync(productionNumber, pi.Inventory, pi.InventoryQuantity * quantity, doneBy, -1);
                     }
 
 
@@ -45,7 +45,7 @@ namespace IMS.Plugins.InMemory
                 // add product transaction record
                 _productTransactions.Add(new ProductTransaction
                 {
-                    ProductionNumber = productionNnumber,
+                    ProductionNumber = productionNumber,
                     ProductId = product.ProductId,
                     QuantityBefore = product.Quantity,
                     ActivityType = ProductTransactionType.ProduceProduct,
@@ -54,6 +54,23 @@ namespace IMS.Plugins.InMemory
                     TransactionDate = DateTime.Now
                 });
             }
+        }
+
+        public Task SellProductAsync(string saleOrderNumber, Product product, int quantity, double unitPrice, string doneBy)
+        {
+            _productTransactions.Add(new ProductTransaction
+            {
+                SaleOrderNumber = saleOrderNumber,
+                ProductId = product.ProductId,
+                QuantityBefore = product.Quantity,
+                ActivityType = ProductTransactionType.SellProduct,
+                QuantityAfter = product.Quantity - quantity,
+                DoneBy = doneBy,
+                TransactionDate = DateTime.Now,
+                UnitPrice = unitPrice
+            });
+
+            return Task.CompletedTask;
         }
     }
 }
