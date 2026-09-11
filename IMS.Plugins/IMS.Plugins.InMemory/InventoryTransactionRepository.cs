@@ -23,7 +23,7 @@ namespace IMS.Plugins.InMemory
         {
             var inventories = (await inventoryRepository.GetInventoriesByNameAsync(string.Empty)).ToList();
             var query = from it in _inventoryTransactions
-                        join inv in inventories on it.InventoryTransactionId equals inv.InventoryId
+                        join inv in inventories on it.InventoryId equals inv.InventoryId
                         where (string.IsNullOrWhiteSpace(inventoryName) || inv.InventoryName.ToLower().IndexOf(inventoryName.ToLower()) >= 0)
                         && (!startDate.HasValue || it.TransactionDate >= startDate.Value.Date)
                         && (!endDate.HasValue || it.TransactionDate <= endDate.Value.Date)
@@ -42,7 +42,7 @@ namespace IMS.Plugins.InMemory
                             TransactionDate = it.TransactionDate,
                             DoneBy = it.DoneBy
 						};
-            return query;
+            return query.ToList();
 		}
 
         public void ProduceAsync(string productionNumber, Inventory inventory, int quantityToConsume, string doneBy, double price)
