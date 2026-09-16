@@ -55,15 +55,20 @@
 	public int InvId { get; set; }
 
 	[SupplyParameterFromForm]
-	public Inventory? inventory { get; set; }
+	public InventoryViewModel? inventory { get; set; }
 
 	protected override async Task OnParametersSetAsync()
 	{
-		this.inventory ??= await ViewInventoryByIdUseCase.ExecuteAsync(this.InvId);
-
-		if(this.inventory is null)
+		if (inventory is null)
 		{
-			NavigationManager.NavigateTo("/not-found");		
+			var inv = await ViewInventoryByIdUseCase.ExecuteAsync(this.InvId);
+			inventory = new InventoryViewModel
+			{
+				InventoryId = inv.InventoryId,
+				InventoryName = inv.InventoryName,
+				Quantity = inv.Quantity,
+				Price = inv.Price
+			};
 		}
 	}
 
@@ -71,7 +76,15 @@
 	{
 		if (inventory is not null) 
 		{ 
-			await EditInventoryUseCase.ExecuteAsync(inventory);
+			var inv = new Inventory
+			{
+				InventoryId = inventory.InventoryId,
+				InventoryName = inventory.InventoryName,
+				Quantity = inventory.Quantity,
+				Price = inventory.Price
+			};
+
+			await EditInventoryUseCase.ExecuteAsync(inv);
 			NavigationManager.NavigateTo("/inventories");
 		}
 	}
