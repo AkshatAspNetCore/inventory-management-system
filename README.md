@@ -22,7 +22,7 @@ Built with **Clean Architecture**, a **plugin-based** persistence layer (swap in
 
 - **Architecture:** Clean Architecture — CoreBusiness · Use Cases · Plugins (InMemory + EFCore) · WebApp
 - The solution follows **Clean Architecture** — dependencies point **inward**, so the business logic never references the database or the UI.
-- **Dependency Rule:** WebApp → Use Cases → CoreBusiness.
+- **Dependency Rule:** WebApp → Use Cases → CoreBusiness.  
   Plugins implement the interfaces the Use Cases define, so the dependency is inverted — the persistence
   layer (InMemory for tests, EFCore for the real database) is chosen in `Program.cs` and can be swapped with a single line.
 
