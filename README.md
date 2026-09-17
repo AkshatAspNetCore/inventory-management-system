@@ -11,7 +11,7 @@ Built with **Clean Architecture**, a **plugin-based** persistence layer (swap in
 
 - **Frontend:** Blazor Web App (.NET 9) — Interactive Server render mode (SignalR)
 - **Backend:** ASP.NET Core, C#
-- **Architecture:** Clean Architecture — Domain · Use Cases · Plugins
+- **Architecture:** Clean Architecture — CoreBusiness · Use Cases · Plugins (InMemory + EFCore) · WebApp
 - **Persistence:** EF Core (SQL Server / LocalDB) **and** an in-memory plugin — interchangeable
 - **Validation:** System.ComponentModel.DataAnnotations + custom domain rules
 - **UI:** Bootstrap 5, reusable Blazor components
@@ -22,7 +22,8 @@ Built with **Clean Architecture**, a **plugin-based** persistence layer (swap in
 
 - **Architecture:** Clean Architecture — CoreBusiness · Use Cases · Plugins (InMemory + EFCore) · WebApp
 - The solution follows **Clean Architecture** — dependencies point **inward**, so the business logic never references the database or the UI.
-- **Dependency Rule:** WebApp → Use Cases → CoreBusiness. Plugins implement the interfaces the Use Cases define, so the dependency is inverted — the persistence
+- **Dependency Rule:** WebApp → Use Cases → CoreBusiness.
+  Plugins implement the interfaces the Use Cases define, so the dependency is inverted — the persistence
   layer (InMemory for tests, EFCore for the real database) is chosen in `Program.cs` and can be swapped with a single line.
 
   ## Screenshots
