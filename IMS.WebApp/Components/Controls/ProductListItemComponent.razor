@@ -6,7 +6,7 @@
 	<tr>
 		<td>@Product.ProductName</td>
 		<td>@Product.Quantity</td>
-	    <td>@Product.Price</td>
+	    <td>@Product.Price.ToString("c")</td>
 	     <td>
 		   <a class="btn btn-light"
 		      href = "/editproduct/@Product.ProductId">

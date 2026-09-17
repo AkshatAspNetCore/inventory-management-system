@@ -13,7 +13,7 @@ namespace IMS.Plugins.InMemory
         private readonly IInventoryTransactionRepository inventoryTransactionRepository;
         private readonly IInventoryRepository inventoryRepository;
 
-        public ProductTransactionEFCoreRepository(IDbContextFactory<IMSContext> contextFactory)
+        public ProductTransactionEFCoreRepository(IDbContextFactory<IMSContext> contextFactory, IProductRepository productRepository, IInventoryTransactionRepository inventoryTransactionRepository, IInventoryRepository inventoryRepository)
         {
             this.contextFactory = contextFactory;
             this.productRepository = productRepository;
@@ -33,7 +33,7 @@ namespace IMS.Plugins.InMemory
                     // add inventory transaction record
                     if (pi.Inventory is not null)
                     {
-                        inventoryTransactionRepository.ProduceAsync(productionNumber, pi.Inventory, pi.InventoryQuantity * quantity, doneBy, -1);
+                        await inventoryTransactionRepository.ProduceAsync(productionNumber, pi.Inventory, pi.InventoryQuantity * quantity, doneBy, -1);
                     }
 
 
@@ -55,7 +55,8 @@ namespace IMS.Plugins.InMemory
                     ActivityType = ProductTransactionType.ProduceProduct,
                     QuantityAfter = product.Quantity + quantity,
                     DoneBy = doneBy,
-                    TransactionDate = DateTime.Now
+                    TransactionDate = DateTime.Now,
+                    UnitPrice = 0
                 });
 
                 await db.SaveChangesAsync();

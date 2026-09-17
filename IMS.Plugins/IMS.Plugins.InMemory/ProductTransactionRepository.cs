@@ -51,6 +51,7 @@ namespace IMS.Plugins.InMemory
                     ActivityType = ProductTransactionType.ProduceProduct,
                     QuantityAfter = product.Quantity + quantity,
                     DoneBy = doneBy,
+                    UnitPrice = 0,
                     TransactionDate = DateTime.Now
                 });
             }

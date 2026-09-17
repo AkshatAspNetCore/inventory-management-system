@@ -47,8 +47,10 @@ namespace IMS.Plugins.EFCoreSqlServer
         public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
         {
             using var db = contextFactory.CreateDbContext();
+            if (string.IsNullOrWhiteSpace(name))
+                return await db.Products.ToListAsync();
 
-            return await db.Products.Where(x => x.ProductName.ToLower().IndexOf(name.ToLower()) >= 0).ToListAsync();
+            return await db.Products.Where(x => x.ProductName.Contains(name)).ToListAsync();
         }
 
         public async Task UpdateProductAsync(Product product)

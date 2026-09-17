@@ -47,7 +47,7 @@ namespace IMS.Plugins.EFCoreSqlServer
                 QuantityAfter = inventory.Quantity - quantityToConsume,
                 TransactionDate = DateTime.Now,
                 DoneBy = doneBy,
-                UnitPrice = price
+                UnitPrice = 0
             });
 
             await db.SaveChangesAsync();

@@ -56,7 +56,7 @@ namespace IMS.Plugins.InMemory
                 QuantityAfter = inventory.Quantity - quantityToConsume,
                 TransactionDate = DateTime.Now,
                 DoneBy = doneBy,
-                UnitPrice = price
+                UnitPrice = 0
             });
 
             return Task.CompletedTask;
