@@ -38,8 +38,6 @@ namespace IMS.Plugins.EFCoreSqlServer
         public async Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name)
         {
             using var db = contextFactory.CreateDbContext();
-            if(string.IsNullOrWhiteSpace(name))
-                return await db.Inventories.ToListAsync();
 
             return await db.Inventories.Where(x => x.InventoryName.ToLower().IndexOf(name.ToLower()) >= 0).ToListAsync();
         }
