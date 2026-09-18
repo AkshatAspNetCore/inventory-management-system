@@ -77,7 +77,7 @@ Built with **Clean Architecture**, a **plugin-based** persistence layer (swap in
 3. Create the database (Package Manager Console):  
    Add-Migration init
    Update-Database
-5. 4. Run the app (F5). The database is seeded with sample products and inventories.
+4. Run the app (F5). The database is seeded with sample products and inventories.
 
 ---
 
