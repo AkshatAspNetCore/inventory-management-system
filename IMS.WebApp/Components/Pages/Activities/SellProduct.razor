@@ -4,7 +4,7 @@
 
 @rendermode InteractiveServer
 
-@attribute [Authorize]
+@attribute [Authorize(Policy = "Inventory")]
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
